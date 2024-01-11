@@ -9,7 +9,7 @@ describe('Teste login', () => {
         cy.visit(gn.url)
     })
 
-    it('login', function() {  
+    it('login standard', function() {  
         // Realizando acesso a pagina saucedemo     
         cy.visit(gn.url);
 
@@ -17,30 +17,30 @@ describe('Teste login', () => {
         cy.get('#user-name').type('standard_user'); 
         cy.get('#password').type('secret_sauce');
         cy.get('#login-button').click();
+    })
 
-        // Selecionando item para enviar ao carrinho 
-        cy.get(':nth-child(1) > .pricebar > .btn_primary').click();
-        cy.get(':nth-child(2) > .pricebar > .btn_primary').click();
-        cy.get(':nth-child(3) > .pricebar > .btn_primary').click();
-        cy.get(':nth-child(4) > .pricebar > .btn_primary').click();
+    it('login problem', function() {  
+        // Realizando acesso a pagina saucedemo     
+        cy.visit(gn.url);
 
-        // Acessando carrinho de compra
-        cy.get('.svg-inline--fa').click();
+        // Realizando login com usuario apresentando problema nas imagens de anuncio
+        cy.get('#user-name').type('problem_user'); 
+        cy.get('#password').type('secret_sauce');
+        cy.get('#login-button').click();
+        cy.screenshot('Evidencia homepage');
+    })
 
-        // Deletando itens do carrinho de compra
-        cy.get(':nth-child(6) > .cart_item_label > .item_pricebar > .btn_secondary').click();
-        cy.get(':nth-child(5) > .cart_item_label > .item_pricebar > .btn_secondary').click();
+    it('login locked', function() {  
+        // Realizando acesso a pagina saucedemo     
+        cy.visit(gn.url);
 
-        // Finalizando compra
-        cy.get('.btn_action').click();
+        // Realizando login com usuario bloqueado
+        cy.get('#user-name').type('locked_out_user'); 
+        cy.get('#password').type('secret_sauce');
+        cy.get('#login-button').click();
+        cy.get('[data-test="error"]')
+        .should('have.text', 'Epic sadface: Sorry, this user has been locked out.');
+        cy.screenshot('Evidencia Login');
 
-        // Preenchendo dados pessoais
-        cy.get('[data-test="firstName"]').type('Anderson ');
-        cy.get('[data-test="lastName"]').type('Lacerda');
-        cy.get('[data-test="postalCode"]').type('02464090');
-
-        //Finalizando compra!
-        cy.get('.btn_primary').click();
-        cy.get('.btn_action').click();
-    });
+    })
 })
